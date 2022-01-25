@@ -63,5 +63,15 @@ def extract_soduko(img, contours, target_width=450, target_height=450):
     return img_soduko
 
 
+def split_soduko(img_sudoku):
+    boxes = []
+    rows = np.vsplit(img_soduko, 9)
+    for row in rows:
+        cols = no.hsplit(row, 9)
+        for col in cols:
+            boxes.append(col)
+    return boxes
+
+
 if __name__ == "__main__":
     main()
