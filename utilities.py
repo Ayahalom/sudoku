@@ -38,20 +38,29 @@ def draw_biggest_contour(img, contours):
     return img_biggest_contour
 
 
-def extract_soduko(img, contours):
-    # biggest_contour,_ = find_biggest_contour(contours)
-    pass
-
-
 def reorder_biggest_contour(biggest_contour):
-    max_width = 0
-    max_width_ind = -1
-    max_height = 0
-    max_height_ind = -1
-    for vertex in biggest_contour:
-        # if vertex
-        pass
-    pass
+    current_points = biggest_contour.reshape((4, 2))
+    new_points = np.zeros((4, 1, 2), dtype=np.int32)
+    add = current_points.sum(1)
+    new_points[0] = current_points[np.argmin(add)]
+    new_points[3] = current_points[np.argmax(add)]
+    diff = np.diff(current_points, axis=1)
+    new_points[1] = current_points[np.argmin(diff)]
+    new_points[2] = current_points[np.argmax(diff)]
+    return new_points
+
+
+def extract_soduko(img, contours, target_width=450, target_height=450):
+    biggest_contour, _ = find_biggest_contour(contours)
+    biggest_contour = reorder_biggest_contour(biggest_contour)
+    source_perspective = np.float32(biggest_contour)
+    target_perspective = np.float32([[0, 0], [target_width, 0], [
+                                    0, target_height], [target_width, target_height]])
+    transform_matrix = cv2.getPerspectiveTransform(
+        source_perspective, target_perspective)
+    img_soduko = cv2.warpPerspective(
+        img, transform_matrix, (target_width, target_height))
+    return img_soduko
 
 
 if __name__ == "__main__":
