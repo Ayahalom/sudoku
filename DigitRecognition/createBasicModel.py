@@ -1,6 +1,10 @@
-import cv2
-import tensorflow as tf
+import pickle
 import numpy as np
+import tensorflow as tf
+import cv2
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+tf.get_logger().setLevel('INFO')
 
 
 def load_mnist():
@@ -44,13 +48,33 @@ def test_with_image(model, img):
     print(np.argmax(prediction))
 
 
+def save_model(model, file):
+    with open(file, 'wb') as f:
+        pickle.dump(model, f)
+    print(f'model saved succsessfully to {file}')
+    # model.save('digits.model')
+
+
+def load_model(file):
+    with open(file, 'rb') as f:
+        model = pickle.load(f)
+    return model
+
+
+# def silance_tf_warnings():
+#     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+
 def main():
-    # model = None
-    model, (x_train, y_train), (x_test, y_test) = train_model()
+    model, (x_train, y_train), (x_test, y_test) = train_model(
+        Epochs=3, num_layers=3)
     loss, accuracy = model_loss_and_accuracy(model, x_test, y_test)
     print(
         f'loss of the model is {loss}, and accuracy of the model is {accuracy}')
 
+    save_model(model, 'model.pickle')
+    # model = load_model(
+    #     "digits.model")
     test_with_image(model, "test_two_digit.png")
 
 
