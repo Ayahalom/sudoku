@@ -45,14 +45,11 @@ def test_with_image(model, img):
     img = cv2.imread(img)[:, :, 0]
     img = np.invert(np.array([img]))
     prediction = model.predict(img)
-    print(np.argmax(prediction))
+    print(f'Ima, the digit you wrote is {np.argmax(prediction)}')
 
 
 def save_model(model, file):
-    with open(file, 'wb') as f:
-        pickle.dump(model, f)
-    print(f'model saved succsessfully to {file}')
-    # model.save('digits.model')
+    model.save('basic_model')
 
 
 def load_model(file):
@@ -71,11 +68,9 @@ def main():
     loss, accuracy = model_loss_and_accuracy(model, x_test, y_test)
     print(
         f'loss of the model is {loss}, and accuracy of the model is {accuracy}')
-
     save_model(model, 'model.pickle')
     # model = load_model(
     #     "digits.model")
-    test_with_image(model, "test_two_digit.png")
 
 
 if __name__ == "__main__":

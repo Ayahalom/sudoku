@@ -60,15 +60,17 @@ def extract_soduko(img, contours, target_width=450, target_height=450):
         source_perspective, target_perspective)
     img_soduko = cv2.warpPerspective(
         img, transform_matrix, (target_width, target_height))
+    img_soduko = cv2.cvtColor(img_soduko, cv2.COLOR_BGR2GRAY)
     return img_soduko
 
 
-def split_soduko(img_sudoku):
+def split_soduko(img_soduko, model_size=28):
     boxes = []
     rows = np.vsplit(img_soduko, 9)
     for row in rows:
-        cols = no.hsplit(row, 9)
+        cols = np.hsplit(row, 9)
         for col in cols:
+
             boxes.append(col)
     return boxes
 

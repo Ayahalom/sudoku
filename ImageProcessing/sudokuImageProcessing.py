@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
+import utilities
 
 
-def pre_processing(img_path, size=None):
+def load_img(img_path, size=None):
     img = cv2.imread(img_path)
     if size is not None:
         img = cv2.resize(img, (size, size))
@@ -22,8 +23,15 @@ def extracting_sudoku():
 
 def main():
     img_path = "C:\shurim\CS\Projects\Sudoku\material\solvable_sudoku_with_hidden_singles.png"
-    img, img_blank = pre_processing(img_path)
-    cv2.imshow("Trying", img)
+    img, img_blank = load_img(img_path)
+    img_threshold = utilities.preprocess_img(img)
+    img_contours, contours, hirerarchy = utilities.find_contours(
+        img, img_threshold)
+    biggest_contour, max_area = utilities.find_biggest_contour(contours)
+    img_biggest_contour = utilities.draw_biggest_contour(img, contours)
+    img_sudoku = utilities.extract_soduko(img, contours)
+    boxes = utilities.split_soduko(img_sudoku)
+    cv2.imshow("image", boxes[2])
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
