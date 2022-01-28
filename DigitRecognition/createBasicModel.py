@@ -49,12 +49,11 @@ def test_with_image(model, img):
 
 
 def save_model(model, file):
-    model.save('basic_model')
+    model.save('./DigitRecognition/basic_model')
 
 
 def load_model(file):
-    with open(file, 'rb') as f:
-        model = pickle.load(f)
+    model = tf.keras.models.load_model(file)
     return model
 
 
@@ -63,14 +62,14 @@ def load_model(file):
 
 
 def main():
-    model, (x_train, y_train), (x_test, y_test) = train_model(
-        Epochs=3, num_layers=3)
-    loss, accuracy = model_loss_and_accuracy(model, x_test, y_test)
-    print(
-        f'loss of the model is {loss}, and accuracy of the model is {accuracy}')
-    save_model(model, 'model.pickle')
-    # model = load_model(
-    #     "digits.model")
+    # model, (x_train, y_train), (x_test, y_test) = train_model(
+    #     Epochs=3, num_layers=3)
+    # loss, accuracy = model_loss_and_accuracy(model, x_test, y_test)
+    # print(
+    #     f'loss of the model is {loss}, and accuracy of the model is {accuracy}')
+    # save_model(model, 'model.pickle')
+    model = load_model("./DigitRecognition/basic_model")
+    test_with_image(model, "./DigitRecognition/test_two_digit.png")
 
 
 if __name__ == "__main__":
