@@ -44,8 +44,8 @@ def model_loss_and_accuracy(model, x_test, y_test):
 def test_with_image(model, img):
     img = cv2.imread(img)[:, :, 0]
     img = np.invert(np.array([img]))
-    prediction = model.predict(img)
-    print(f'Ima, the digit you wrote is {np.argmax(prediction)}')
+    prediction = np.argmax(model.predict(img))
+    return prediction
 
 
 def save_model(model, file):
@@ -62,14 +62,12 @@ def load_model(file):
 
 
 def main():
-    # model, (x_train, y_train), (x_test, y_test) = train_model(
-    #     Epochs=3, num_layers=3)
-    # loss, accuracy = model_loss_and_accuracy(model, x_test, y_test)
-    # print(
-    #     f'loss of the model is {loss}, and accuracy of the model is {accuracy}')
-    # save_model(model, 'model.pickle')
-    model = load_model("./DigitRecognition/basic_model")
-    test_with_image(model, "./DigitRecognition/test_two_digit.png")
+    model, (x_train, y_train), (x_test, y_test) = train_model(
+        Epochs=5, num_layers=2)
+    loss, accuracy = model_loss_and_accuracy(model, x_test, y_test)
+    print(
+        f'loss of the model is {loss}, and accuracy of the model is {accuracy}')
+    save_model(model, 'model.pickle')
 
 
 if __name__ == "__main__":
