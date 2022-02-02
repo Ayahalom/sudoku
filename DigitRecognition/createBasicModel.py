@@ -41,10 +41,17 @@ def model_loss_and_accuracy(model, x_test, y_test):
     return loss, accuracy
 
 
-def test_with_image(model, img):
+def test_with_image_path(model, img):
     img = cv2.imread(img)[:, :, 0]
     img = np.invert(np.array([img]))
-    prediction = np.argmax(model.predict(img))
+    return test_with_image(model, img)
+
+
+def test_with_image(model, img):
+    if np.amax(model.predict(img)) < 0.5:
+        prediction = 0
+    else:
+        prediction = np.argmax(model.predict(img))
     return prediction
 
 
