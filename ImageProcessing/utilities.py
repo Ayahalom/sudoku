@@ -64,15 +64,21 @@ def extract_soduko(img, contours, target_width=450, target_height=450):
     return img_soduko
 
 
-def split_soduko(img_soduko, model_size=28):
+def split_soduko(img_soduko, model_shape=28):
     boxes = []
     rows = np.vsplit(img_soduko, 9)
     for row in rows:
         cols = np.hsplit(row, 9)
         for col in cols:
-
+            col = process_box(col, model_shape)
             boxes.append(col)
     return boxes
+
+
+def process_box(box, model_shape=28):
+    shape_to_length = model_shape*model_shape
+    box = np.reshape(box, shape_to_length)
+    return box
 
 
 if __name__ == "__main__":
