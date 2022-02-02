@@ -1,6 +1,11 @@
 import cv2
 import numpy as np
 import utilities
+# fmt: off
+import sys
+sys.path.append("C:\\shurim\\CS\\Projects\\Sudoku")
+import DigitRecognition.createBasicModel as bm
+# fmt: on
 
 
 def load_img(img_path, size=None):
@@ -31,7 +36,16 @@ def main():
     img_biggest_contour = utilities.draw_biggest_contour(img, contours)
     img_sudoku = utilities.extract_soduko(img, contours)
     boxes = utilities.split_soduko(img_sudoku)
-    cv2.imshow("image", boxes[2])
+    model = bm.load_model("./DigitRecognition/basic_model")
+    for box in boxes:
+        cv2.imshow("box", img_sudoku)
+        cv2.waitKey(0)
+        box = np.invert(np.array([img]))
+        cv2.imshow("box", img_sudoku)
+        cv2.waitKey(0)
+        prediction = bm.test_with_image(model, box)
+        print(f'the prediction is {prediction}')
+    cv2.imshow("image", img_sudoku)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
